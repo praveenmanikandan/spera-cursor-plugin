@@ -1,4 +1,0 @@
-interface:
-  display_name: "Build Spera Module"
-  short_description: "Create compile-clean reusable Spera modules"
-  default_prompt: "Use $spera-build-module to create or revise a reusable Spera module, configure exact ports, and stop after a verified receipt."

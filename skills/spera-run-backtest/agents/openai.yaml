@@ -1,4 +1,0 @@
-interface:
-  display_name: "Spera Run Backtest"
-  short_description: "Run exact-revision Spera backtests safely"
-  default_prompt: "Use $spera-run-backtest to test an exact Spera strategy revision and summarize the bounded results without deploying anything."

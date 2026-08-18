@@ -1,0 +1,15 @@
+{
+  "name": "spera-cursor-plugin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Validation and smoke tests for the Spera Cursor plugin package.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node scripts/validate-plugin.mjs",
+    "test:live": "node scripts/smoke-live.mjs",
+    "validate:submission": "node scripts/validate-plugin.mjs --submission"
+  }
+}

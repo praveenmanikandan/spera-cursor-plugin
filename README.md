@@ -35,8 +35,20 @@ Restart Cursor or run **Developer: Reload Window**, then open **Customize** and 
 skills and MCP server are listed. Complete OAuth and verify that `spera_context_get` reports the expected
 scopes before testing write workflows.
 
-## Privacy and support
+Repository checks use Node.js 20 or newer and have no third-party dependencies:
 
+```text
+npm test
+npm run test:live
+npm run validate:submission
+```
+
+`test:live` validates the public MCP OAuth discovery chain. `validate:submission` additionally requires
+an approved open-source license before marketplace submission.
+
+## Data handling, privacy, and support
+
+- Data handling: [DATA_HANDLING.md](DATA_HANDLING.md)
 - Privacy policy: https://www.spera.bot/privacy
 - Terms of service: https://www.spera.bot/terms
 - Support: support@spera.bot

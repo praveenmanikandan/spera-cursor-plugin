@@ -1,4 +1,0 @@
-interface:
-  display_name: "Build Spera Strategy"
-  short_description: "Create and repair compile-clean strategies"
-  default_prompt: "Use $spera-build-strategy to create or revise a Spera strategy and stop after a verified compile receipt."
