@@ -1,0 +1,11 @@
+interface:
+  display_name: "Spera Foundations"
+  short_description: "Use Spera MCP with safe revisions and receipts"
+  default_prompt: "Use $spera-foundations to connect to Spera and follow its authorization, revision, receipt, retry, and stopping rules."
+dependencies:
+  tools:
+    - type: mcp
+      value: spera
+      description: "OAuth-protected Spera MCP server"
+      transport: streamable_http
+      url: "https://api.spera.bot/mcp"

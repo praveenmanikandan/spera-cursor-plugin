@@ -1,0 +1,21 @@
+{
+  "name": "spera",
+  "version": "1.0.0",
+  "description": "Build, inspect, and backtest Spera trading strategies from Cursor.",
+  "author": {
+    "name": "Spera",
+    "email": "support@spera.bot"
+  },
+  "homepage": "https://www.spera.bot/handbook",
+  "repository": "https://github.com/praveenmanikandan/spera-cursor-plugin",
+  "keywords": [
+    "trading",
+    "strategy",
+    "backtesting",
+    "crypto",
+    "mcp"
+  ],
+  "logo": "assets/logo.png",
+  "skills": "skills/",
+  "mcpServers": "mcp.json"
+}

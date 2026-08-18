@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build Spera Custom Node"
+  short_description: "Create and repair compile-clean custom nodes"
+  default_prompt: "Use $spera-build-custom-node to create or revise a Spera custom node and stop after a verified compile receipt."
