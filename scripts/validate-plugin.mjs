@@ -72,12 +72,21 @@ safeRelative(manifest.logo, 'logo');
 safeRelative(manifest.skills, 'skills');
 safeRelative(manifest.mcpServers, 'mcpServers');
 
-const logo = await readFile(path.join(root, manifest.logo ?? 'missing')).catch(() => Buffer.alloc(0));
-check(logo.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])), 'logo must be a PNG');
-if (logo.length >= 24) {
-  const width = logo.readUInt32BE(16);
-  const height = logo.readUInt32BE(20);
-  check(width === height && width >= 256, 'logo must be square and at least 256px');
+const logoPath = path.join(root, manifest.logo ?? 'missing');
+const logo = await readFile(logoPath).catch(() => Buffer.alloc(0));
+if (manifest.logo?.endsWith('.svg')) {
+  const svg = logo.toString('utf8');
+  check(/<svg\b/u.test(svg), 'logo must be a valid SVG document');
+  check(/width="512"\s+height="512"/u.test(svg), 'SVG logo must declare a square 512px canvas');
+  check(/<rect[^>]+width="880"[^>]+height="880"[^>]+fill="#0B0B0A"/u.test(svg), 'SVG logo must contain the approved opaque background plate');
+  check(!/opacity="0"|fill="none"[^>]*<\/rect>/u.test(svg), 'SVG background plate must not be transparent');
+} else {
+  check(logo.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])), 'logo must be an SVG or PNG');
+  if (logo.length >= 24) {
+    const width = logo.readUInt32BE(16);
+    const height = logo.readUInt32BE(20);
+    check(width === height && width >= 256, 'logo must be square and at least 256px');
+  }
 }
 
 const mcp = await json(manifest.mcpServers ?? 'mcp.json');
@@ -119,7 +128,7 @@ const secretPatterns = [
 ];
 for (const file of files) {
   if (file.relative.startsWith('.git/')) continue;
-  if (file.relative !== 'assets/logo.png') {
+  if (!file.relative.startsWith('assets/logo.')) {
     const content = await readFile(file.absolute, 'utf8').catch(() => '');
     for (const pattern of secretPatterns) check(!pattern.test(content), `${file.relative} appears to contain a secret`);
   }

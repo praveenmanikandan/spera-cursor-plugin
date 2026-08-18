@@ -19,7 +19,7 @@ async function request(url, options) {
 for (const url of [
   'https://github.com/praveenmanikandan/spera-cursor-plugin',
   'https://raw.githubusercontent.com/praveenmanikandan/spera-cursor-plugin/main/.cursor-plugin/plugin.json',
-  'https://raw.githubusercontent.com/praveenmanikandan/spera-cursor-plugin/main/assets/logo.png',
+  'https://raw.githubusercontent.com/praveenmanikandan/spera-cursor-plugin/main/assets/logo.svg',
   'https://www.spera.bot/handbook',
   'https://www.spera.bot/privacy',
   'https://www.spera.bot/terms',

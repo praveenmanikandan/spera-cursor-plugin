@@ -1,6 +1,7 @@
 {
   "name": "spera",
   "version": "1.0.0",
+  "license": "MIT",
   "description": "Build, inspect, and backtest Spera trading strategies from Cursor.",
   "author": {
     "name": "Spera",
@@ -15,7 +16,7 @@
     "crypto",
     "mcp"
   ],
-  "logo": "assets/logo.png",
+  "logo": "assets/logo.svg",
   "skills": "skills/",
   "mcpServers": "mcp.json"
 }
