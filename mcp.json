@@ -1,23 +1,11 @@
 {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
   "mcpServers": {
     "spera": {
+      "type": "streamable-http",
       "url": "https://api.spera.bot/mcp",
       "headers": {
         "X-Spera-MCP-Mode": "authoring"
-      },
-      "auth": {
-        "scopes": [
-          "spera:context:read",
-          "spera:artifact:read",
-          "spera:artifact:write",
-          "spera:backtest:run",
-          "spera:backtest:read",
-          "spera:backtest:cancel",
-          "spera:knowledge:read",
-          "spera:knowledge:write",
-          "spera:documentation:read",
-          "spera:documentation:write"
-        ]
       }
     }
   }

@@ -1,8 +1,8 @@
 {
-  "name": "spera-cursor-plugin",
+  "name": "spera-agent-plugin",
   "version": "1.0.0",
   "private": true,
-  "description": "Validation and smoke tests for the Spera Cursor plugin package.",
+  "description": "Validation and smoke tests for the portable Spera Agent Plugin and its client adapters.",
   "type": "module",
   "engines": {
     "node": ">=20"

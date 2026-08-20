@@ -1,8 +1,21 @@
-# Spera for Cursor
+# Spera Agent Plugin
 
-Spera for Cursor packages the production Spera MCP server and its portable agent skills into one
-installable plugin. It helps users create and revise strategy graphs, modules, and custom nodes; run
-exact-revision backtests; and maintain project knowledge and artifact documentation.
+Spera packages its production MCP server and eight portable Agent Skills as an
+[Agent Plugin](https://agent-plugins.org/). The portable core works in conforming clients, while the
+repository retains compatibility adapters for Cursor and ChatGPT/Codex. It helps users create and
+revise strategy graphs, modules, and custom nodes; run exact-revision backtests; and maintain project
+knowledge and artifact documentation.
+
+## Package layout
+
+- `plugin.json` and `mcp.json`: vendor-neutral Agent Plugins 1.0.0 manifests.
+- `skills/`: portable Agent Skills shared by every compatible client.
+- `.cursor-plugin/plugin.json`: compatibility metadata for the existing Cursor listing.
+- `.codex-plugin/plugin.json` and `.app.json`: ChatGPT/Codex packaging and the registered Spera app mapping.
+
+The portable package contains no access token, client secret, exchange credential, or user data.
+Agent Plugins 1.0.0 leaves OAuth to the client; each client discovers and runs Spera's authorization
+flow when the MCP connection is enabled.
 
 ## Capabilities
 
@@ -19,11 +32,19 @@ Backtest results are historical evidence for an exact revision, not a performanc
 
 ## Connect
 
-The plugin connects to `https://api.spera.bot/mcp` over Streamable HTTP. On first use, Cursor opens
-Spera's OAuth authorization flow. Sign in to Spera and approve only the scopes shown in the consent
-screen. A complete authoring grant exposes 31 tools.
+The plugin connects to `https://api.spera.bot/mcp` over Streamable HTTP. On first use, a supported
+client opens Spera's OAuth authorization flow. Sign in to Spera and approve only the scopes shown in
+the consent screen. A complete authoring grant exposes 31 tools.
 
 ## Local testing
+
+### Agent Plugins clients
+
+Install this repository using the Agent Plugin workflow supported by your client. Clients currently
+implement their own installation UI and OAuth storage; consult the client's plugin documentation for
+the exact installation command or marketplace.
+
+### Cursor
 
 Copy or link this repository to Cursor's local plugin directory:
 
@@ -35,7 +56,16 @@ Restart Cursor or run **Developer: Reload Window**, then open **Customize** and 
 skills and MCP server are listed. Complete OAuth and verify that `spera_context_get` reports the expected
 scopes before testing write workflows.
 
-Repository checks use Node.js 20 or newer and have no third-party dependencies:
+### Codex
+
+The repository root contains `.codex-plugin/plugin.json`, the Codex `.app.json` mapping to Spera's
+registered OpenAI app, the eight portable skills, and transparent 512×512 PNG marketplace assets.
+Point a local Codex marketplace entry at this repository, install `spera` from that marketplace, and
+start a new task so Codex loads the plugin's skills and registered app connection.
+
+Repository checks use Node.js 20 or newer and have no third-party dependencies. `npm test` validates
+the closed Agent Plugins manifests, Cursor and OpenAI compatibility manifests, the MCP profiles,
+portable skills, documentation, secret hygiene, and the Codex PNG dimensions and transparency:
 
 ```text
 npm test
