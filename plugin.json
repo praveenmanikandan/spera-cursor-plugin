@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "spera",
+  "version": "1.0.0",
+  "description": "Build, inspect, backtest, and document Spera trading strategies with portable Agent Skills and MCP tools.",
+  "author": {
+    "name": "SPERO SPERA PRIVATE LIMITED",
+    "email": "support@spera.bot",
+    "url": "https://www.spera.bot"
+  },
+  "homepage": "https://www.spera.bot/handbook",
+  "repository": "https://github.com/praveenmanikandan/spera-cursor-plugin",
+  "license": "MIT",
+  "keywords": [
+    "trading",
+    "strategy",
+    "backtesting",
+    "agent-skills",
+    "mcp"
+  ]
+}

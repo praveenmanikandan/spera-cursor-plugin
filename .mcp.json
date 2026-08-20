@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "spera": {
+      "url": "https://api.spera.bot/mcp",
+      "http_headers": {
+        "X-Spera-MCP-Mode": "authoring"
+      },
+      "scopes": [
+        "spera:context:read",
+        "spera:artifact:read",
+        "spera:artifact:write",
+        "spera:backtest:run",
+        "spera:backtest:read",
+        "spera:backtest:cancel",
+        "spera:knowledge:read",
+        "spera:knowledge:write",
+        "spera:documentation:read",
+        "spera:documentation:write"
+      ],
+      "startup_timeout_sec": 30,
+      "tool_timeout_sec": 300
+    }
+  }
+}

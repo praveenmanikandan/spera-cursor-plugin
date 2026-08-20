@@ -1,0 +1,45 @@
+{
+  "name": "spera",
+  "version": "1.0.0",
+  "description": "Build, inspect, and backtest Spera trading strategies from Codex.",
+  "author": {
+    "name": "SPERO SPERA PRIVATE LIMITED",
+    "email": "support@spera.bot",
+    "url": "https://www.spera.bot"
+  },
+  "homepage": "https://www.spera.bot/handbook",
+  "repository": "https://github.com/praveenmanikandan/spera-cursor-plugin",
+  "license": "MIT",
+  "keywords": [
+    "trading",
+    "strategy",
+    "backtesting",
+    "crypto",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Spera",
+    "shortDescription": "Build and backtest strategies with Spera.",
+    "longDescription": "Create and revise Spera strategies, modules, and custom nodes; run exact-revision backtests; and maintain project knowledge and artifact documentation. Spera does not deploy live trading bots or access exchange credentials.",
+    "developerName": "SPERO SPERA PRIVATE LIMITED",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Interactive"
+    ],
+    "websiteURL": "https://www.spera.bot",
+    "privacyPolicyURL": "https://www.spera.bot/privacy",
+    "termsOfServiceURL": "https://www.spera.bot/terms",
+    "defaultPrompt": [
+      "Build a Spera strategy from my trading idea.",
+      "Run an exact-revision backtest for my Spera strategy.",
+      "Review and document my Spera project."
+    ],
+    "brandColor": "#FDC238",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/logo.png"
+  }
+}
