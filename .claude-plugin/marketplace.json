@@ -1,0 +1,31 @@
+{
+  "name": "spera",
+  "owner": {
+    "name": "SPERO SPERA PRIVATE LIMITED",
+    "email": "support@spera.bot",
+    "url": "https://www.spera.bot"
+  },
+  "plugins": [
+    {
+      "name": "spera",
+      "source": "./",
+      "version": "1.0.0",
+      "description": "Spera strategy authoring, compilation, backtesting, Project Knowledge, and documentation over the OAuth-protected Spera MCP server.",
+      "author": {
+        "name": "SPERO SPERA PRIVATE LIMITED",
+        "email": "support@spera.bot",
+        "url": "https://www.spera.bot"
+      },
+      "homepage": "https://www.spera.bot/handbook",
+      "license": "MIT",
+      "category": "development",
+      "keywords": [
+        "trading",
+        "strategy",
+        "backtesting",
+        "crypto",
+        "mcp"
+      ]
+    }
+  ]
+}

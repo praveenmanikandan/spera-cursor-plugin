@@ -225,6 +225,40 @@ for (const [field, relative] of [
   validateTransparentPng(asset, `Codex ${field}`);
 }
 
+const claudeManifest = await json('.claude-plugin/plugin.json');
+check(claudeManifest.name === manifest.name, 'Claude and Cursor plugin names must match');
+check(claudeManifest.version === manifest.version, 'Claude and Cursor plugin versions must match');
+check(claudeManifest.license === manifest.license, 'Claude and Cursor plugin licenses must match');
+check(claudeManifest.repository === manifest.repository, 'Claude and Cursor repository URLs must match');
+check(typeof claudeManifest.description === 'string' && claudeManifest.description.length >= 30, 'Claude plugin description is too short');
+check(claudeManifest.author?.name === 'SPERO SPERA PRIVATE LIMITED', 'Claude developer identity is incorrect');
+check(claudeManifest.author?.email === 'support@spera.bot', 'Claude support email is incorrect');
+check(claudeManifest.author?.url === 'https://www.spera.bot', 'Claude author URL is incorrect');
+check(claudeManifest.skills === './skills/', 'Claude skills path must be ./skills/');
+safeRelative(claudeManifest.skills, 'Claude skills');
+const claudeServer = claudeManifest.mcpServers?.spera;
+check(Object.keys(claudeManifest.mcpServers ?? {}).length === 1, 'Claude plugin must declare exactly one MCP server');
+check(claudeServer?.type === 'http', 'Claude MCP transport must be http');
+check(claudeServer?.url === portableServer?.url, 'Claude and portable MCP URLs must match');
+check(claudeServer?.headers?.['X-Spera-MCP-Mode'] === 'authoring', 'Claude MCP mode header must be authoring');
+check(Object.keys(claudeServer?.headers ?? {}).length === 1, 'Claude MCP headers must not contain credentials or extra values');
+check(
+  Object.keys(claudeServer ?? {}).every((field) => ['type', 'url', 'headers'].includes(field)),
+  'Claude MCP server contains unsupported fields',
+);
+
+const claudeMarketplace = await json('.claude-plugin/marketplace.json');
+check(claudeMarketplace.name === 'spera', 'Claude marketplace name must be spera');
+check(claudeMarketplace.owner?.name === 'SPERO SPERA PRIVATE LIMITED', 'Claude marketplace owner identity is incorrect');
+check(claudeMarketplace.owner?.email === 'support@spera.bot', 'Claude marketplace support email is incorrect');
+check(Array.isArray(claudeMarketplace.plugins) && claudeMarketplace.plugins.length === 1, 'Claude marketplace must list exactly one plugin');
+const claudeEntry = claudeMarketplace.plugins?.[0] ?? {};
+check(claudeEntry.name === claudeManifest.name, 'Claude marketplace entry name must match the plugin');
+check(claudeEntry.version === claudeManifest.version, 'Claude marketplace entry version must match the plugin');
+check(claudeEntry.license === claudeManifest.license, 'Claude marketplace entry license must match the plugin');
+check(claudeEntry.source === './', 'Claude marketplace entry must install this repository');
+check(typeof claudeEntry.description === 'string' && claudeEntry.description.length >= 30, 'Claude marketplace entry description is too short');
+
 const logoPath = path.join(root, manifest.logo ?? 'missing');
 const logo = await readFile(logoPath).catch(() => Buffer.alloc(0));
 if (manifest.logo?.endsWith('.svg')) {

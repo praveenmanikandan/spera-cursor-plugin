@@ -12,6 +12,8 @@ knowledge and artifact documentation.
 - `skills/`: portable Agent Skills shared by every compatible client.
 - `.cursor-plugin/plugin.json`: compatibility metadata for the existing Cursor listing.
 - `.codex-plugin/plugin.json` and `.app.json`: ChatGPT/Codex packaging and the registered Spera app mapping.
+- `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`: Claude Code packaging and the
+  single-plugin marketplace entry.
 
 The portable package contains no access token, client secret, exchange credential, or user data.
 Agent Plugins 1.0.0 leaves OAuth to the client; each client discovers and runs Spera's authorization
@@ -62,6 +64,21 @@ The repository root contains `.codex-plugin/plugin.json`, the Codex `.app.json` 
 registered OpenAI app, the eight portable skills, and transparent 512×512 PNG marketplace assets.
 Point a local Codex marketplace entry at this repository, install `spera` from that marketplace, and
 start a new task so Codex loads the plugin's skills and registered app connection.
+
+### Claude Code
+
+The repository root contains `.claude-plugin/plugin.json` (metadata, the `skills/` path, and the
+production Streamable HTTP MCP connection) and `.claude-plugin/marketplace.json` (a single-plugin
+marketplace). Install it with:
+
+```
+/plugin marketplace add praveenmanikandan/spera-cursor-plugin
+/plugin install spera@spera
+```
+
+Claude Code then loads the eight portable skills and registers the `spera` MCP server; complete OAuth
+in the browser tab it opens. A local clone can be added the same way by passing its path to
+`/plugin marketplace add`.
 
 Repository checks use Node.js 20 or newer and have no third-party dependencies. `npm test` validates
 the closed Agent Plugins manifests, Cursor and OpenAI compatibility manifests, the MCP profiles,

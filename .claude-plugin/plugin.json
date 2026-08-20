@@ -1,0 +1,30 @@
+{
+  "name": "spera",
+  "version": "1.0.0",
+  "description": "Build, inspect, backtest, and document Spera trading strategies from Claude Code.",
+  "author": {
+    "name": "SPERO SPERA PRIVATE LIMITED",
+    "email": "support@spera.bot",
+    "url": "https://www.spera.bot"
+  },
+  "homepage": "https://www.spera.bot/handbook",
+  "repository": "https://github.com/praveenmanikandan/spera-cursor-plugin",
+  "license": "MIT",
+  "keywords": [
+    "trading",
+    "strategy",
+    "backtesting",
+    "crypto",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": {
+    "spera": {
+      "type": "http",
+      "url": "https://api.spera.bot/mcp",
+      "headers": {
+        "X-Spera-MCP-Mode": "authoring"
+      }
+    }
+  }
+}
