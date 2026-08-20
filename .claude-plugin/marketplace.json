@@ -1,5 +1,6 @@
 {
   "name": "spera",
+  "description": "Spera's official Claude Code marketplace: strategy authoring, backtesting, and documentation over the OAuth-protected Spera MCP server.",
   "owner": {
     "name": "SPERO SPERA PRIVATE LIMITED",
     "email": "support@spera.bot",

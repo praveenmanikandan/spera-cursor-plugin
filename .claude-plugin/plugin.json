@@ -18,13 +18,5 @@
     "mcp"
   ],
   "skills": "./skills/",
-  "mcpServers": {
-    "spera": {
-      "type": "http",
-      "url": "https://api.spera.bot/mcp",
-      "headers": {
-        "X-Spera-MCP-Mode": "authoring"
-      }
-    }
-  }
+  "mcpServers": "./.claude-plugin/mcp.json"
 }

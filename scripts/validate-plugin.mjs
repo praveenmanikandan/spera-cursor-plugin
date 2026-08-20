@@ -236,8 +236,15 @@ check(claudeManifest.author?.email === 'support@spera.bot', 'Claude support emai
 check(claudeManifest.author?.url === 'https://www.spera.bot', 'Claude author URL is incorrect');
 check(claudeManifest.skills === './skills/', 'Claude skills path must be ./skills/');
 safeRelative(claudeManifest.skills, 'Claude skills');
-const claudeServer = claudeManifest.mcpServers?.spera;
-check(Object.keys(claudeManifest.mcpServers ?? {}).length === 1, 'Claude plugin must declare exactly one MCP server');
+check(claudeManifest.mcpServers === './.claude-plugin/mcp.json', 'Claude MCP path must be ./.claude-plugin/mcp.json');
+safeRelative(claudeManifest.mcpServers, 'Claude mcpServers');
+const claudeMcp = await json('.claude-plugin/mcp.json');
+check(
+  Object.keys(claudeMcp).every((field) => field === 'mcpServers'),
+  'Claude MCP config must contain only mcpServers',
+);
+const claudeServer = claudeMcp.mcpServers?.spera;
+check(Object.keys(claudeMcp.mcpServers ?? {}).length === 1, 'Claude plugin must declare exactly one MCP server');
 check(claudeServer?.type === 'http', 'Claude MCP transport must be http');
 check(claudeServer?.url === portableServer?.url, 'Claude and portable MCP URLs must match');
 check(claudeServer?.headers?.['X-Spera-MCP-Mode'] === 'authoring', 'Claude MCP mode header must be authoring');
