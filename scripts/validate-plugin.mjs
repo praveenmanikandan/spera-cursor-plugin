@@ -16,18 +16,6 @@ const expectedSkills = [
   'spera-update-project-knowledge',
   'spera-write-documentation',
 ];
-const expectedScopes = [
-  'spera:context:read',
-  'spera:artifact:read',
-  'spera:artifact:write',
-  'spera:backtest:run',
-  'spera:backtest:read',
-  'spera:backtest:cancel',
-  'spera:knowledge:read',
-  'spera:knowledge:write',
-  'spera:documentation:read',
-  'spera:documentation:write',
-];
 const agentPluginSchema = 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json';
 const agentMcpSchema = 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json';
 const portableManifestFields = new Set([
@@ -210,7 +198,8 @@ check(codexManifest.repository === manifest.repository, 'Codex and Cursor reposi
 check(codexManifest.author?.name === 'SPERO SPERA PRIVATE LIMITED', 'Codex developer identity is incorrect');
 check(codexManifest.author?.email === 'support@spera.bot', 'Codex support email is incorrect');
 check(codexManifest.skills === './skills/', 'Codex skills path must be ./skills/');
-check(codexManifest.mcpServers === './.mcp.json', 'Codex MCP path must be ./.mcp.json');
+check(codexManifest.apps === './.app.json', 'Codex app path must be ./.app.json');
+check(!('mcpServers' in codexManifest), 'Codex must use the registered Spera app instead of bundling a second MCP connection');
 check(codexManifest.interface?.displayName === 'Spera', 'Codex display name must be Spera');
 check(codexManifest.interface?.developerName === 'SPERO SPERA PRIVATE LIMITED', 'Codex developer name is incorrect');
 check(codexManifest.interface?.category === 'Productivity', 'Codex category must be Productivity');
@@ -260,14 +249,14 @@ check(server?.type === portableServer?.type, 'Cursor and portable MCP transports
 check(server?.headers?.['X-Spera-MCP-Mode'] === 'authoring', 'Cursor MCP mode header must be authoring');
 check(Object.keys(server?.headers ?? {}).length === 1, 'Cursor MCP headers must not contain credentials or extra values');
 
-const codexMcp = await json(codexManifest.mcpServers ?? '.mcp.json');
-const codexServer = codexMcp.mcpServers?.spera;
-check(codexServer?.url === portableServer?.url, 'Codex and portable MCP URLs must match');
-check(codexServer?.http_headers?.['X-Spera-MCP-Mode'] === 'authoring', 'Codex MCP mode header must be authoring');
-check(Object.keys(codexServer?.http_headers ?? {}).length === 1, 'Codex MCP headers must not contain credentials or extra values');
-check(JSON.stringify(codexServer?.scopes) === JSON.stringify(expectedScopes), 'Codex MCP OAuth scopes do not match the reviewed authoring profile');
-check(codexServer?.startup_timeout_sec === 30, 'Codex MCP startup timeout must be 30 seconds');
-check(codexServer?.tool_timeout_sec === 300, 'Codex MCP tool timeout must be 300 seconds');
+const codexApps = await json(codexManifest.apps ?? '.app.json');
+check(
+  JSON.stringify(Object.keys(codexApps.apps ?? {})) === JSON.stringify(['spera']),
+  'Codex .app.json must contain exactly the registered Spera app',
+);
+const codexApp = codexApps.apps?.spera;
+check(codexApp?.id === 'asdk_app_6a8437fecfec819181eda17dc8faa4c8', 'Codex app ID must match the reviewed Spera app');
+check(Object.keys(codexApp ?? {}).every((field) => field === 'id'), 'Codex app mapping contains unsupported fields');
 
 const skillEntries = (await readdir(path.join(root, 'skills'), { withFileTypes: true }))
   .filter((entry) => entry.isDirectory())

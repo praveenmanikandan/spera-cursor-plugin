@@ -11,7 +11,7 @@ knowledge and artifact documentation.
 - `plugin.json` and `mcp.json`: vendor-neutral Agent Plugins 1.0.0 manifests.
 - `skills/`: portable Agent Skills shared by every compatible client.
 - `.cursor-plugin/plugin.json`: compatibility metadata for the existing Cursor listing.
-- `.codex-plugin/plugin.json` and `.mcp.json`: ChatGPT/Codex packaging and marketplace metadata.
+- `.codex-plugin/plugin.json` and `.app.json`: ChatGPT/Codex packaging and the registered Spera app mapping.
 
 The portable package contains no access token, client secret, exchange credential, or user data.
 Agent Plugins 1.0.0 leaves OAuth to the client; each client discovers and runs Spera's authorization
@@ -58,10 +58,10 @@ scopes before testing write workflows.
 
 ### Codex
 
-The repository root contains `.codex-plugin/plugin.json`, the Codex `.mcp.json`, the eight portable
-skills, and transparent 512×512 PNG marketplace assets. Point a local Codex marketplace entry at this
-repository, install `spera` from that marketplace, and start a new task so Codex loads the plugin's
-skills and MCP server.
+The repository root contains `.codex-plugin/plugin.json`, the Codex `.app.json` mapping to Spera's
+registered OpenAI app, the eight portable skills, and transparent 512×512 PNG marketplace assets.
+Point a local Codex marketplace entry at this repository, install `spera` from that marketplace, and
+start a new task so Codex loads the plugin's skills and registered app connection.
 
 Repository checks use Node.js 20 or newer and have no third-party dependencies. `npm test` validates
 the closed Agent Plugins manifests, Cursor and OpenAI compatibility manifests, the MCP profiles,
