@@ -227,7 +227,7 @@ for (const [field, relative] of [
 
 const claudeManifest = await json('.claude-plugin/plugin.json');
 check(claudeManifest.$schema === 'https://json.schemastore.org/claude-code-plugin-manifest.json', 'Claude manifest must declare the Claude Code plugin schema');
-check(claudeManifest.displayName === 'Spera', 'Claude plugin displayName must be Spera');
+check(!('displayName' in claudeManifest), 'Claude manifest must omit displayName: `claude plugin tag` rejects it as an unrecognized key');
 check(/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(claudeManifest.name ?? ''), 'Claude plugin name must be kebab-case');
 check(claudeManifest.name === manifest.name, 'Claude and Cursor plugin names must match');
 check(claudeManifest.version === manifest.version, 'Claude and Cursor plugin versions must match');
