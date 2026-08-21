@@ -10,7 +10,7 @@ this repository. The plugin does not request exchange credentials and does not p
 or live-trading tools.
 
 Spera uses data received through this integration to provide and secure the requested service. Spera
-does not use plugin content or Cursor user data received through this integration to train machine-
+does not use plugin content or client user data received through this integration to train machine-
 learning models. Account controls, retention, and deletion requests are governed by the
 [Spera privacy policy](https://www.spera.bot/privacy) and [terms](https://www.spera.bot/terms).
 
