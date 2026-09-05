@@ -10,7 +10,7 @@
     {
       "name": "spera",
       "source": "./",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Spera strategy authoring, compilation, backtesting, Project Knowledge, and documentation over the OAuth-protected Spera MCP server.",
       "author": {
         "name": "SPERO SPERA PRIVATE LIMITED",

@@ -2,7 +2,7 @@
   "mcpServers": {
     "spera": {
       "type": "http",
-      "url": "https://api.spera.bot/mcp",
+      "url": "https://api.spera.bot/mcp?mode=authoring",
       "headers": {
         "X-Spera-MCP-Mode": "authoring"
       }

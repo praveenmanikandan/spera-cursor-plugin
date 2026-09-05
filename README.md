@@ -95,9 +95,12 @@ Neither is a performance promise, and neither authorizes deployment.
 
 ## Connection
 
-The plugin connects to `https://api.spera.bot/mcp` over Streamable HTTP with the header
-`X-Spera-MCP-Mode: authoring`. This repository contains no access token, client secret, or exchange
-credential — OAuth is run by your client and the resulting authorization is stored by your client.
+The plugin connects to `https://api.spera.bot/mcp?mode=authoring` over Streamable HTTP. The
+`?mode=authoring` suffix is what makes the server request the ten authoring scopes; the equivalent
+`X-Spera-MCP-Mode: authoring` header is sent alongside for clients that forward custom headers, but
+many connector interfaces drop them, and a grant obtained against the bare URL is read-only. This
+repository contains no access token, client secret, or exchange credential — OAuth is run by your
+client and the resulting authorization is stored by your client.
 
 ## Trust and updates
 

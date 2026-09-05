@@ -168,7 +168,11 @@ check(
 const portableServer = portableMcp.mcpServers?.spera;
 check(Object.keys(portableMcp.mcpServers ?? {}).length === 1, 'portable MCP config must contain exactly one server');
 check(portableServer?.type === 'streamable-http', 'portable MCP transport must be streamable-http');
-check(portableServer?.url === 'https://api.spera.bot/mcp', 'portable MCP URL must be the production HTTPS endpoint');
+// The AUTHORING url, not the bare one. Connector UIs routinely drop custom headers,
+// so `?mode=authoring` — not `X-Spera-MCP-Mode` — is what actually decides whether the
+// grant comes back writable. Asserting the bare URL here is what shipped a read-only
+// manifest into the OpenAI app review.
+check(portableServer?.url === 'https://api.spera.bot/mcp?mode=authoring', 'portable MCP URL must be the production authoring endpoint');
 check(portableServer?.headers?.['X-Spera-MCP-Mode'] === 'authoring', 'portable MCP mode header must be authoring');
 check(Object.keys(portableServer?.headers ?? {}).length === 1, 'portable MCP headers must not contain credentials or extra values');
 check(

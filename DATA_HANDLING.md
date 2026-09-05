@@ -1,6 +1,6 @@
 # Data handling
 
-The plugin sends only user-requested MCP tool calls to `https://api.spera.bot/mcp`. Depending on the
+The plugin sends only user-requested MCP tool calls to `https://api.spera.bot/mcp?mode=authoring`. Depending on the
 selected tool, those calls can contain Spera project identifiers, strategy or module content, backtest
 parameters, project knowledge, and documentation. Responses can contain the corresponding Spera data
 and backtest results.
