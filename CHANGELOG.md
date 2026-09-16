@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.1.2 - 2026-09-16
+
+- **Cursor can sign in.** Cursor desktop decides a server needs sign-in only from a `401` on
+  `initialize`. The server answered a tokenless `initialize` with `200` for anonymous discovery, so
+  Cursor showed the `spera` server as **Error** and never offered **Authenticate**. The server now
+  challenges any tokenless request that carries `X-Spera-MCP-Mode`, which every `mcp.json` in this
+  repository sends; requests by URL alone (ChatGPT connectors, tool scanners) still get anonymous
+  discovery. No manifest URL changes: the header stays in every MCP config and is now load-bearing.
+- `scripts/doctor.mjs` probes anonymous discovery without the header and adds a **sign-in trigger**
+  probe that expects `401` on `initialize` with it; `/spera-doctor` describes the new probe.
+- Sync four skills with the current server: branch-addressed reads (`version: { branchId }`) in
+  `spera-build-strategy`, `spera-foundations`, and `spera-run-backtest`; research studies and the
+  Spera-only research discipline in `spera-foundations`, `spera-run-backtest`, and
+  `spera-deliver-strategy`; and result cards in `spera-foundations`.
+- README: Cursor Directory install and the Authenticate step, the header's role in sign-in, and the
+  current 42-tool count.
+- Versions move from 1.1.0 to 1.1.2 to match the canonical profile; 1.1.1 was never published.
+
 ## 1.1.0 - 2026-09-05
 
 - **Declare the authoring URL.** Every manifest now points at

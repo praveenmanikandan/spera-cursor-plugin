@@ -22,7 +22,7 @@ If the install summary says `Run /reload-plugins to activate.`, run that. Then a
 
 Select **spera**, choose **Authenticate**, and approve the scopes on Spera's consent screen. Verify with
 `/spera:spera-foundations` or by asking Claude to call `spera_context_get` — a complete grant reports
-contract `1.0`, 10 scopes, and 31 tools.
+contract `1.0`, 10 scopes, and 42 tools.
 
 Skills are namespaced by the plugin, so they invoke as `/spera:spera-build-strategy`,
 `/spera:spera-run-backtest`, and so on. The names match the Cursor and Codex packages deliberately: a
@@ -30,14 +30,18 @@ workflow you know in one client is the same workflow here.
 
 ### Cursor
 
-Copy or link this repository into Cursor's local plugin directory:
+Install **Spera** from [Cursor Directory](https://cursor.directory/plugins/spera), or copy or link this
+repository into Cursor's local plugin directory:
 
 ```text
 ~/.cursor/plugins/local/spera
 ```
 
 Restart Cursor or run **Developer: Reload Window**, then open **Customize** and confirm Spera's skills
-and MCP server are listed.
+and MCP server are listed. Until you sign in, the `spera` server reports that it needs authentication:
+choose **Authenticate**, approve the scopes on Spera's consent screen, then restart Cursor so the new
+grant attaches. If the server shows **Error** with no Authenticate option, run
+`node scripts/doctor.mjs` from this repository and check the `sign-in trigger` line.
 
 ### ChatGPT / Codex
 
@@ -67,7 +71,7 @@ rules — not just the tool schemas:
 | `spera-write-documentation` | Receipt-grounded artifact documentation |
 | `spera-deliver-strategy` | Compose the above into a documented, backtested handoff |
 
-A complete authoring grant exposes **31 MCP tools**.
+A complete authoring grant exposes **42 MCP tools**.
 
 **Context cost:** roughly 865 tokens of always-on context across the eight skills; each skill costs more
 only when it actually fires. Claude Code shows this in the plugin details view before you install.
@@ -98,7 +102,12 @@ Neither is a performance promise, and neither authorizes deployment.
 The plugin connects to `https://api.spera.bot/mcp?mode=authoring` over Streamable HTTP. The
 `?mode=authoring` suffix is what makes the server request the ten authoring scopes; the equivalent
 `X-Spera-MCP-Mode: authoring` header is sent alongside for clients that forward custom headers, but
-many connector interfaces drop them, and a grant obtained against the bare URL is read-only. This
+many connector interfaces drop them, and a grant obtained against the bare URL is read-only.
+
+The header also decides how a tokenless `initialize` is answered. A request that carries it — every
+native plugin config in this repository — gets `401` with the OAuth challenge, which is what makes
+Cursor offer **Authenticate**. A request by URL alone (ChatGPT connectors, tool scanners) gets anonymous
+discovery instead. Keep the header in every `mcp.json`. This
 repository contains no access token, client secret, or exchange credential — OAuth is run by your
 client and the resulting authorization is stored by your client.
 
@@ -122,9 +131,12 @@ auto-update for the `spera` marketplace in `/plugin` → **Marketplaces**, or re
 - `.claude-plugin/` — Claude Code manifest, MCP server file, and single-plugin marketplace
 - `.cursor-plugin/plugin.json` — Cursor listing metadata
 - `.codex-plugin/plugin.json`, `.app.json` — Codex packaging and registered app mapping
+- `commands/`, `scripts/doctor.mjs` — `/spera-connect`, `/spera-doctor`, and the connection doctor
 
-Every file above is generated from one canonical profile in the Spera repository, so the clients cannot
-drift apart.
+The portable manifests, the Claude adapter, the skills, the commands, and the doctor are generated from
+one canonical profile in the Spera repository, so the clients cannot drift apart. The Cursor and Codex
+manifests, `.app.json`, and this README are maintained here and checked against the generated files by
+`npm test`.
 
 ## Repository checks
 
@@ -134,11 +146,14 @@ Node.js 20 or newer, no third-party dependencies:
 npm test
 npm run test:live
 npm run validate:submission
+node scripts/doctor.mjs
 ```
 
 `npm test` validates every manifest, the MCP profiles, the portable skills, documentation, secret
 hygiene, and the Codex PNG dimensions and transparency. `test:live` exercises the public MCP OAuth
 discovery chain. `validate:submission` additionally requires an approved open-source license.
+`scripts/doctor.mjs` probes the live server without a token: anonymous discovery, the sign-in trigger,
+the scope challenge, and OAuth discovery.
 
 Claude Code users can also run its own validator against a clone:
 

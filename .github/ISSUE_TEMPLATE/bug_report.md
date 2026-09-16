@@ -18,7 +18,7 @@ labels: bug
 Spera returns an id for everything it does. Pasting these turns a report into a lookup:
 
 - Tool called: <!-- e.g. spera_strategy_patch -->
-- Contract version and tool count from `spera_context_get`: <!-- e.g. 1.0, 31 tools -->
+- Contract version and tool count from `spera_context_get`: <!-- e.g. 1.0, 42 tools -->
 - Artifact id and revision: <!-- e.g. strategy 7c1f2a4e..., commit 21bf2eb2... -->
 - Receipt id, if one was returned: <!-- e.g. artifact_compiled e724dc9e... -->
 - Backtest job id, if applicable:
