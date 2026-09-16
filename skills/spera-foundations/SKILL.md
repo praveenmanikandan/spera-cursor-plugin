@@ -17,7 +17,7 @@ These rules bind every workflow that researches, tests, compares, or improves a 
 
 - Run EVERY backtest through Spera MCP: `spera_backtest_quick_run`, `spera_backtest_deep_start`, and
   `spera_backtest_compare_start` for variants.
-- Never use a local engine or an off-platform backtest — no `localhost:8085/simulate`, no strategy-core
+- Never use a local engine or an off-platform backtest — no local engine simulate endpoint, no strategy-core
   simulate binaries, no ad-hoc scripts. Never fetch raw exchange candles to evaluate ideas or to look at
   a study's sealed window.
 - Open a research study (`spera_study_open`) before exploring ideas for a question.
