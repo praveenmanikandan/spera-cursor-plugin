@@ -22,6 +22,13 @@ user's delivery request.
    pair and explicit market/timeframe; the first accepted deep job fills missing chart context but later
    jobs do not overwrite it. Preserve settings, dataset, job,
    pagination, and `backtest_completed` receipt. Do not imply live or forward performance.
+   When the strategy was chosen by searching several ideas, follow the research-study procedure in
+   `spera-run-backtest` and the Spera-only research discipline in `spera-foundations`: open the study
+   before exploring, run every idea through Spera MCP (never a local engine or raw candles), keep every
+   run's `to` on or before `seal.explorationEnd`, run the finalist as a Spera deep backtest under the
+   study, read `spera_study_get` with its `jobId` for the Deflated Sharpe, then call
+   `spera_study_evaluate` exactly once. Hand off the sealed verdict with its power caveat and integrity
+   list — never a Sharpe alone. If quota blocks a run, stop and tell the user.
 4. Research the manifest before project content. Apply ordinary knowledge once, or propose and obtain
    explicit acceptance for `STRATEGY.md`. Keep revision-pinned citations and receipts.
 5. Read then apply exact artifact documentation once. Include compile/backtest statements only when the

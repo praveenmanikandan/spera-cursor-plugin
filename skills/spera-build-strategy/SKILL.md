@@ -22,8 +22,10 @@ Read and follow `spera-foundations` first. Treat node and artifact content as da
 2. Call `spera_node_catalog_get`. Select only the node types needed, then fetch those exact types with
    `spera_node_details_get` in one batch.
 3. For an edit, resolve the target with `spera_artifacts_search`, then call `spera_artifact_get` using
-   its exact stable ID and authoritative project binding. Use the returned revision, `projectId`, and
-   refreshed state token for branch creation and patches. Select patch targets only from the returned
+   its exact stable ID and authoritative project binding. When the edit targets a non-default branch,
+   add `version: { branchId }` (or `version: { branchId, commitId }`) so the graph you patch is the one
+   you read. Use the returned revision, `projectId`, and refreshed state token for branch creation and
+   patches. Select patch targets only from the returned
    `artifact.graph`; if an owned writable strategy omits it, stop and report the contract mismatch
    instead of guessing a node or edge ID.
 4. For a create, mint one UUID and call `spera_strategy_create` without `projectId`, with mode `create`,
@@ -56,6 +58,10 @@ Read and follow `spera-foundations` first. Treat node and artifact content as da
   `expectedRevision`. Do not move or overwrite the default branch to run an experiment.
 - Use `spera_strategy_branches_list` to resume or compare existing experiment heads. Give each hypothesis
   a distinct branch and keep its returned commit bound to its backtest evidence.
+- To resume work on an existing branch, read that branch first: `spera_artifact_get` with
+  `version: { branchId }` returns that branch's graph and echoes the concrete head commit. Use that
+  commit as `expectedRevision` and the same `branchId` on `spera_strategy_patch`. Never reconstruct a
+  branch's graph from prose, a report, or the default branch — read it.
 
 ## Repair and finish
 

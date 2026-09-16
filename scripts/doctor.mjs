@@ -42,10 +42,10 @@ const fail = (...args) => { failures += 1; line("FAIL", ...args); };
 console.log(`Spera MCP doctor — ${URL_UNDER_TEST}\n`);
 
 // Probe 1 — discovery. `initialize` is answered WITHOUT a token so that app-store
-// tool scanners can enumerate the catalogue before any grant exists. A 401 here
-// means the server predates that fix, and a scanner would see nothing but the
-// challenge.
-const discovery = await post(URL_UNDER_TEST, { "X-Spera-MCP-Mode": MODE }, "initialize");
+// tool scanners can enumerate the catalogue before any grant exists. Scanners cannot
+// send custom headers, so this probe sends none. A 401 here means a scanner would
+// see nothing but the challenge.
+const discovery = await post(URL_UNDER_TEST, {}, "initialize");
 if (discovery.failed) {
   fail("reachable", discovery.failed, URL_UNDER_TEST.includes("localhost")
     ? "start the Spera API gateway, or unset SPERA_MCP_URL to use the hosted server"
@@ -57,6 +57,20 @@ if (discovery.failed) {
   line("OK", "anonymous discovery", `${URL_UNDER_TEST} → ${discovery.status} on initialize`);
 } else {
   fail("anonymous discovery", `${URL_UNDER_TEST} → ${discovery.status} (expected 200)`);
+}
+
+// Probe 1b — sign-in trigger. This plugin's mcp.json sends the mode header, and
+// clients such as Cursor only offer Authenticate when `initialize` is challenged.
+if (!discovery.failed) {
+  const native = await post(URL_UNDER_TEST, { "X-Spera-MCP-Mode": MODE }, "initialize");
+  if (native.failed) {
+    fail("sign-in trigger", native.failed, "check network access to the Spera API");
+  } else if (native.status !== 401) {
+    fail("sign-in trigger", `initialize with the mode header → ${native.status} (expected 401)`,
+      "the client will look connected but never offer Authenticate");
+  } else {
+    line("OK", "sign-in trigger", "initialize with the mode header → 401");
+  }
 }
 
 // Probe 2 — the challenge. Discovery is open, so the scope advertisement has to be

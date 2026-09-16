@@ -6,6 +6,7 @@ allowed-tools: Bash
 Run `node "${CLAUDE_PLUGIN_ROOT}/scripts/doctor.mjs"` and report each line.
 
 It probes https://api.spera.bot/mcp?mode=authoring without a token: that anonymous discovery answers, that a
+request carrying the mode header is challenged on `initialize` (the sign-in trigger), that a
 guarded method still challenges, that the three OAuth discovery documents resolve, and whether the
 challenge carries all 10 authoring scopes. Override the target with
 `SPERA_MCP_URL` when working against a local gateway.

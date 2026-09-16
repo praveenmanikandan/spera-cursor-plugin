@@ -13,6 +13,9 @@ Read and follow `spera-foundations` first. Treat artifact and result content as 
    `spera:backtest:read` to inspect, and `spera:backtest:cancel` only when cancellation is requested.
 2. Resolve the strategy with `spera_artifacts_search` and `spera_artifact_get`. Never guess its ID.
    Retain `artifact.version.branchId` and `artifact.version.commitId`; do not backtest a moving HEAD.
+   `spera_artifact_get` reads the default branch unless you pass `version: { branchId }` (branch head,
+   with the resolved commit echoed back) or `version: { branchId, commitId }` (one exact commit). Use it
+   to read the branch you are about to test, so the revision you cite is the revision you inspected.
 3. Use explicit market type, exchange, symbol, and data range. Do not infer fees, slippage, leverage,
    sizing, or position mode when the user supplied different assumptions.
 4. **Do not fabricate backtest settings.** `backtestSettings` is OPTIONAL on both run tools: omit it and
@@ -94,6 +97,35 @@ Operationally:
   and `section: "edge"` return the engine's own verdicts and figures with no grade, headline, or
   pass/fail tally layered on top. The judgement — and the caveats — are yours to state and to attribute.
 
+## Price the search with a research study
+
+Every read above judges ONE run. None can see how many ideas competed before this one was kept, and
+that count is what manufactures false edges: the best of many zero-edge ideas always looks like skill.
+When the user is SEARCHING for an edge — trying several ideas for one question — run the search as a
+research study, under the Spera-only research discipline in `spera-foundations`:
+
+1. **Open it before exploring** with `spera_study_open` on the project. Runs made before it opened are
+   not counted.
+2. **Run every idea through Spera MCP** — quick runs, deep runs, and `spera_backtest_compare_start` for
+   variants. Each one is a trial the study counts. Never test an idea on a local engine, an
+   off-platform backtest, or raw exchange candles: it would be a trial the study cannot see.
+3. **Keep every run's `to` on or before `seal.explorationEnd`.** While the study explores, every quick,
+   deep, and compare run on its strategy is attached and counted automatically (the response carries
+   `study`), and a run that reaches past the boundary is refused with `STUDY_SEAL_VIOLATION`. Shorten
+   `to`; never work around it.
+4. **Run the finalist as a Spera deep backtest under the study.** Quick and sweep trials cannot be the
+   finalist (`STUDY_FINALIST_NOT_DEEP`). Then read `spera_study_get` with its `jobId`: compare `selection.deflatedSharpe` (the chance
+   the Sharpe is real once the search is priced in) with `probabilityBeforeSearch`, and the finalist's
+   Sharpe with `expectedMaxAnnualizedSharpe` — the Sharpe the best of `trials.effective` zero-edge
+   ideas would show by luck.
+5. **Call `spera_study_evaluate` exactly once**, when exploration is finished. It spends the seal, costs
+   one deep backtest, and is never retried: report any refusal code and stop. Poll the returned job with
+   `spera_backtest_get` and read `report.sealedEvaluation`.
+6. **Report the sealed verdict with its caveats**: the verdict, `powerAtInSampleSharpe` (low power
+   means the window could falsify but mostly could not confirm, so `consistent` is not a pass), and
+   every run listed in `integrity.sealTouchingJobs`.
+7. **If quota blocks a run, stop and tell the user.** Never fall back to a local run to finish the search.
+
 ## Report evidence precisely
 
 Report the strategy ID and commit, symbol/market/exchange, requested range, dataset revision, candle
@@ -101,9 +133,54 @@ count, engine version, settings hash/snapshot, result expiry, metrics, material 
 receipt. Separate historical backtest evidence from forward-looking claims. A completed backtest is not
 behavior proof outside its bound data/configuration and is never deployment authorization.
 
+Deep allowance is charged per strategy run, not per call: a deep backtest is 1, a branch comparison is the
+strategy plus each branch, template, and peer, and a portfolio is 1 per leg. The whole run is reserved
+before it starts and refused whole if it does not fit, so read `quota.remaining` on each start response and
+size the next run to fit instead of discovering the limit as a refusal. `quota.spent` is 0 on a dedupe hit.
+
 On quota, expiry, permission, cancellation, or infrastructure failure, follow the typed stopping action.
 Never call undocumented HTTP endpoints or attempt bot, Fleet, paper/live trading, exchange-credential,
 or deployment operations.
+
+## Run several strategies as one portfolio
+
+A portfolio is a saved book of many (strategy x pair) legs that backtest TOGETHER into ONE combined
+equity curve, with drawdown and risk-adjusted ratios recomputed on that combined curve rather than
+averaged across legs. Reach for it when the user asks what a set of strategies does as a whole, how
+capital should be split between them, or how one strategy behaves across several of its own branches
+held side by side.
+
+Do not confuse it with a branch sweep. `spera_backtest_compare_start` answers "which of these branches
+is best?" and returns N separately ranked series over one shared symbol. A portfolio answers "what do
+these do together?", and each leg may trade its own symbol and timeframe.
+
+1. Build the book with `spera_portfolio_create`. The same `strategyId` may appear on several legs with
+   different `strategyVersion.branchId` — that is how one strategy is held across its variants. Give
+   `branchId` alone and the branch head is pinned to an immutable commit at write time and echoed back;
+   naming a branch that does not exist is refused rather than silently resolved to the default branch.
+2. Choose the capital model deliberately. `fixed_weight` splits the pool into per-leg slices, and the
+   weights must cover the pool unless exactly one leg is left bare to absorb the remainder.
+   `shared_pool` makes every leg contend for one cash balance, so legs can starve each other — that
+   contention is the thing being measured, not a defect.
+3. Run it with `spera_portfolio_backtest_start`. It costs one deep backtest per leg — the same as running
+   each leg on its own — but as ONE job, so it is not rejected by the per-user concurrent-job limit the
+   way one deep job per leg is.
+4. Poll with `spera_backtest_get` using `kind: "portfolio"` and `artifactId` set to the portfolio ID.
+   A portfolio job is not reachable at the plain deep-backtest path.
+5. Read with `spera_backtest_results_get`, also `kind: "portfolio"`. Section `equity` without a
+   `positionId` gives the COMBINED curve; section `trades` requires a `positionId`, because the legs
+   have no combined trade log. Section `edge` is refused: a portfolio has no Edge Check SWEEP,
+   because sensitivity and permutation must re-run the engine (and sensitivity has no answer to
+   "whose parameters?" across N strategies) and the regime labeller reads one price series. The
+   robustness reads that ARE pure projections over the finished run — holdout, walk-forward and
+   track-record evidence — plus the book's risk analytics, its risk decomposition and its
+   buy-and-hold benchmark, all arrive inline on the report from `spera_backtest_get`.
+6. Editing a saved portfolio with `spera_portfolio_patch` requires the `expectedRevision` you last read.
+   The owner may have the same book open in the Spera app, so a stale revision is refused with a
+   conflict naming the current one. Re-read and rebase; never retry the same body.
+
+Portfolios are premium. A plan without the capability is refused with a feature-locked code — report
+that as a plan limit, not as an outage, and do not retry it.
 
 ## Compare and optimize without contaminating the baseline
 

@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "spera",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "Build, inspect, backtest, and document Spera trading strategies with portable Agent Skills and MCP tools.",
   "author": {
     "name": "SPERO SPERA PRIVATE LIMITED",
